@@ -1,1 +1,1 @@
-- [vsftpd]"./*.md"
+- [vsftpd](./vsftpd/vsftpd.md)
