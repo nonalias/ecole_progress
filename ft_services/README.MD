@@ -1,1 +1,1 @@
-- [vsftpd](./vsftpd/README.MD)
+- [vsftpd](./vsftpd/)
