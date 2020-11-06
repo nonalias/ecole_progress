@@ -4,119 +4,119 @@
 
 - 먼저, [MetalLB](Nginx%20and%20SSH,%20SSL%20protocol%20in%20alpine%2013cf9068e2d24408bee140212919e855/MetalLB%206d06bb696fa540cbbe67678fb960063c.md)가 설치되어있어야 한다.
 <details><summary>시작하기에 앞서, Docker환경에서 nginx를 가동시켜 보자 (필수 아님)</summary>
-    - 우선, Dockerfile을 작성해 준다.
+- 우선, Dockerfile을 작성해 준다.
 
-        ```cpp
-        vim Dockerfile
+    ```cpp
+    vim Dockerfile
 
-        FROM alpine:latest
+    FROM alpine:latest
 
-        RUN apk update
-        RUN apk add vim
-        RUN apk add nginx
-        RUN apk add openssl
-        RUN apk add openssh
+    RUN apk update
+    RUN apk add vim
+    RUN apk add nginx
+    RUN apk add openssl
+    RUN apk add openssh
 
-        # CMD 명령어로 실행할 sh 파일
-        COPY ./nginx.sh /tmp/nginx.sh
-        # nginx configuration, alpine nginx의 기본 경로는 /etc/nginx/conf.d/ 이다.
-        COPY ./default.conf /etc/nginx/conf.d/default.conf
+    # CMD 명령어로 실행할 sh 파일
+    COPY ./nginx.sh /tmp/nginx.sh
+    # nginx configuration, alpine nginx의 기본 경로는 /etc/nginx/conf.d/ 이다.
+    COPY ./default.conf /etc/nginx/conf.d/default.conf
 
-        # 80, 443, 22번 포트 개방
-        EXPOSE 80 443 22
+    # 80, 443, 22번 포트 개방
+    EXPOSE 80 443 22
 
-        # CMD명령어로 복사한 nginx.sh 실행
-        CMD ["sh", "/tmp/nginx.sh"]
-        ```
+    # CMD명령어로 복사한 nginx.sh 실행
+    CMD ["sh", "/tmp/nginx.sh"]
+    ```
 
-    - [nginx.sh](http://nginx.sh) 파일을 작성해준다.
+- [nginx.sh](http://nginx.sh) 파일을 작성해준다.
 
-        ```jsx
-        vim nginx.sh
+    ```jsx
+    vim nginx.sh
 
-        echo 'root:1q2w3e4r' | chpasswd
+    echo 'root:1q2w3e4r' | chpasswd
 
-        # nginx ssl connect setting
-        openssl req -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=KR/ST=Seoul/L=Seoul/O=42Seoul/OU=KIM/CN=localhost" -keyout localhost.dev.key -out localhost.dev.crt
-        mv localhost.dev.crt /
-        mv localhost.dev.key /
-        chmod 600 /localhost.dev.crt /localhost.dev.key
+    # nginx ssl connect setting
+    openssl req -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=KR/ST=Seoul/L=Seoul/O=42Seoul/OU=KIM/CN=localhost" -keyout localhost.dev.key -out localhost.dev.crt
+    mv localhost.dev.crt /
+    mv localhost.dev.key /
+    chmod 600 /localhost.dev.crt /localhost.dev.key
 
-        # ssh setting
-        sed 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' -i /etc/ssh/sshd_config
-        ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
-        ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
+    # ssh setting
+    sed 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' -i /etc/ssh/sshd_config
+    ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+    ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
 
-        /usr/sbin/sshd
+    /usr/sbin/sshd
 
-        nginx -g 'pid /tmp/nginx.pid; daemon off;';
-        ```
+    nginx -g 'pid /tmp/nginx.pid; daemon off;';
+    ```
 
-    - nginx 설정파일인 default.conf를 작성해준다.
+- nginx 설정파일인 default.conf를 작성해준다.
 
-        ```jsx
-        vim default.conf
+    ```jsx
+    vim default.conf
 
-        # This is a default site configuration which will simply return 404, preventing
-        # chance access to any other virtualhost.
+    # This is a default site configuration which will simply return 404, preventing
+    # chance access to any other virtualhost.
 
-        server {
-        	listen 80 default_server;
-        	listen [::]:80 default_server;
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
 
-        	return 301 https://$host$request_uri;
+        return 301 https://$host$request_uri;
+    }
+    server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+
+        ssl_certificate /localhost.dev.crt;
+        ssl_certificate_key /localhost.dev.key;
+        location / {
+            autoindex on;
         }
-        server {
-        	listen 443 ssl;
-        	listen [::]:443 ssl;
+        root /var/lib/nginx/html;
+        index index.html;
+    }
+    ```
 
-        	ssl_certificate /localhost.dev.crt;
-        	ssl_certificate_key /localhost.dev.key;
-        	location / {
-        		autoindex on;
-        	}
-        	root /var/lib/nginx/html;
-        	index index.html;
-        }
-        ```
+- [Makefile을 작성](https://www.notion.so/Docker-Image-Makefile-6f13583a06a043e5b4938e040bb2a5b2)해준다.
 
-    - [Makefile을 작성](https://www.notion.so/Docker-Image-Makefile-6f13583a06a043e5b4938e040bb2a5b2)해준다.
+    ```jsx
+    IMG_NAME	=	my_nginx
+    PS_NAME		=	nginx-ps
+    PORT1		=	80
+    PORT2		=	443
+    PORT3		=	22
 
-        ```jsx
-        IMG_NAME	=	my_nginx
-        PS_NAME		=	nginx-ps
-        PORT1		=	80
-        PORT2		=	443
-        PORT3		=	22
+    all	:	build run
 
-        all	:	build run
+    run	:
+        docker run --name $(PS_NAME) -d -p $(PORT1):$(PORT1) -p $(PORT2):$(PORT2) -p $(PORT3):$(PORT3) $(IMG_NAME)
 
-        run	:
-        	docker run --name $(PS_NAME) -d -p $(PORT1):$(PORT1) -p $(PORT2):$(PORT2) -p $(PORT3):$(PORT3) $(IMG_NAME)
+    exec:
+        docker exec -it $$(docker ps -aq -f "name=$(PS_NAME)") sh
 
-        exec:
-        	docker exec -it $$(docker ps -aq -f "name=$(PS_NAME)") sh
+    build	:
+        docker build -t $(IMG_NAME) .
 
-        build	:
-        	docker build -t $(IMG_NAME) .
+    rm	:
+        docker rm -f $$(docker ps -f "name=$(PS_NAME)" -aq)
 
-        rm	:
-        	docker rm -f $$(docker ps -f "name=$(PS_NAME)" -aq)
+    rmi	:
+        docker rmi -f $(IMG_NAME)
+    ```
 
-        rmi	:
-        	docker rmi -f $(IMG_NAME)
-        ```
-
-    - `make run`
-    - nginx 작동 확인
-        - 80번포트
-            - curl [localhost:80](http://localhost:80) -L -k
-        - 443번포트
-            - curl [https://localhost:443](https://localhost:443) -k
-        - ssh
-            - ssh root@localhost -u root:1q2w3e4r
-            - 만약 ssh 실행시 certificate 문제가 발생한다면, 다음 명령어를 입력하고 다시 연결을 시도해보자.
-                - `ssh-keygen -R localhost`
+- `make run`
+- nginx 작동 확인
+    - 80번포트
+        - curl [localhost:80](http://localhost:80) -L -k
+    - 443번포트
+        - curl [https://localhost:443](https://localhost:443) -k
+    - ssh
+        - ssh root@localhost -u root:1q2w3e4r
+        - 만약 ssh 실행시 certificate 문제가 발생한다면, 다음 명령어를 입력하고 다시 연결을 시도해보자.
+            - `ssh-keygen -R localhost`
 </details>
 
 ---
