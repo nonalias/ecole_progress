@@ -1,7 +1,7 @@
 # vsftpd in alpine
 
 ## 이 페이지는 alpine환경에서 vsftpd를 사용하기 위한 과정을 기술하였음.
-
+* 먼저, [metalLB](../nginx/Nginx%20and%20SSH,%20SSL%20protocol%20in%20alpine%2013cf9068e2d24408bee140212919e855/MetalLB%206d06bb696fa540cbbe67678fb960063c.md) 가 설치되어 있어야 한다.
 <details>
     <summary>먼저, k8s 환경이 아닌, Docker Container로 vsftpd 환경을 만들어 보자. **(필수사항 아님)**</summary>
     
