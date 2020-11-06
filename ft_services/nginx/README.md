@@ -3,7 +3,7 @@
 ## Kubernetes(k8s)를 통해 nginx를 가동시켜 보자.
 
 - 먼저, [MetalLB](Nginx%20and%20SSH,%20SSL%20protocol%20in%20alpine%2013cf9068e2d24408bee140212919e855/MetalLB%206d06bb696fa540cbbe67678fb960063c.md)가 설치되어있어야 한다.
-- 시작하기에 앞서, Docker환경에서 nginx를 가동시켜 보자 (필수 아님)
+<details><summary>시작하기에 앞서, Docker환경에서 nginx를 가동시켜 보자 (필수 아님)</summary>
     - 우선, Dockerfile을 작성해 준다.
 
         ```cpp
@@ -117,6 +117,7 @@
             - ssh root@localhost -u root:1q2w3e4r
             - 만약 ssh 실행시 certificate 문제가 발생한다면, 다음 명령어를 입력하고 다시 연결을 시도해보자.
                 - `ssh-keygen -R localhost`
+</details>
 
 ---
 
