@@ -1,6 +1,6 @@
 # MySQL in alpine
 
-- 먼저, [metalLB](https://www.notion.so/MetalLB-6d06bb696fa540cbbe67678fb960063c) 가 설치되어 있는지 확인하자.
+- 먼저, [metalLB](../metallb/README.md) 가 설치되어 있는지 확인하자.
 <details>
     <summary>우선, Docker 환경에서 실행이 잘 되는지 확인해보자. (필수사항 아님)</summary>
 - 먼저, Dockerfile을 작성해준다.
