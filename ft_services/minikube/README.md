@@ -29,7 +29,7 @@
 - ft_server를 진행했다면 Docker를 설치하는 방법은 알고 있을 것이다.
 - MSC(Managed Software Center)에 들어가서 Docker 를 찾아 설치한다.
 - 그 후, [42toolbox](https://github.com/alexandregv/42toolbox)를 clone 시켜서 bash init_docker.sh 를 해준다. 만약 비밀번호를 물어본다면 그냥 무시하고 엔터를 눌러준다. 중간에 Y/n 이 나오면 y를 입력해준다.
-- 그리고 나서 상단의 고래모양 배가 있는데, 고래가 물 뿌리는 것을 멈추면 실행이 완료된 것이다.
+- 그리고 나서 우측 상단에 고래모양 배가 있는데, 고래가 물 뿌리는 것을 멈추면 실행이 완료된 것이다.
 
 ---
 
@@ -52,7 +52,7 @@ ln -s goinfre/.minikube .minikube
 - 따라서 이 작업은 최초 한번만 해주고, 만약 자리를 옮길 경우 다음과 같은작업을 해주어야 한다.
 
 ```cpp
-touch ~/goinfre/.minikube
+mkdir ~/goinfre/.minikube
 
 만약 같은 자리에서 다시 켰다면 이 작업은 해줄 필요가 없다.
 그 이유는 goinfre의 내용은 해당 자리에 계속 남아있기 때문이다.
