@@ -294,6 +294,7 @@ spec:
 ## Step 6 : Persistent Volume 그리고 Persistent Volume Claim 작성하기
 
 - Persistent Volume(이하 PV) 는 볼륨에 대한 명세를, 그리고 Persistent Volume Claim은 그 볼륨을 직접 할당 (요청)하는 역할을 한다.
+- 자세한 설명은 [여기](./volume_pv_pvc/README.md) 에 있다.
 
 ```jsx
 apiVersion: v1
