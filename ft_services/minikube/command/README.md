@@ -1,0 +1,49 @@
+# minikube를 사용하면서 자주 쓰는 명령어들
+
+- `minikube delete`
+    - minikube의 모든 내용을 제거한다.
+    - 완전 초기화 시키고 싶을 때 사용한다.
+- `minikube start --driver=virtualbox`
+    - minikube의 하이퍼바이저를 virtualbox로 설정한 후 실행한다.
+    - linux에서 default값은 docker이다~~. macOS에서는 기본적으로 제공되지 않기 때문에 virtualbox로 설정 후 실행한다.~~
+- `minikube dashboard`
+    - 현재 실행중인 모든 오브젝트의 현황을 보여주는 대쉬보드를 실행한다.
+    - 이건 직접 켜봐서 확인해보자.
+- minikube 를 실행하면 kubectl이라는 명령어를 사용할 수 있게 된다.
+    - 이 kubectl은 직접적으로 minikube object에 접근할 수 있게 해준다.
+
+- `kubectl get pods` == `kubectl get pod`
+    - 현재 실행중인 pod의 내용을 보여준다. 실행중인 pod가 없으면 따로 메시지 출력
+- `kubectl get deployments` == `kubectl get deploy`
+    - 현재 실행중인 deployment의 내용을 보여준다. 실행중인 deployment가 없으면 따로 메시지 출력
+- `kubectl get service` == `kubectl get svc`
+    - 현재 실행중인 service의 내용을 보여준다. minikube는 기본적으로 가지고있는 서비스가 하나 있다.
+- `kubectl get replicaset`
+    - 현재 실행중인 replicaset의 내용을 보여준다. 실행중인 replicaset이 없으면 따로 메시지 출력.
+- `kubectl get all`
+    - 현재 실행중인 모든 Object를 출력한다.
+    - pv 와 pvc는 출력되지 않는다.
+- `kubectl get pv`
+    - PersistentVolume의 목록을 출력한다.
+- `kubectl get pvc`
+    - PersistentVolumeClaim의 목록을 출력한다.
+- `kubectl get nodes`
+    - 현재 실행중인 node의 목록을 출력한다.
+- `kubectl describe pods/<pod_id>`
+    - 현재 실행중인 특정 pod의 정보들을 보여준다.
+- `kubectl describe service/<service_id>`
+    - 현재 실행중인 특정 service의 정보들을 보여준다.
+- `kubectl describe nodes/<node_id>`
+    - 현재 실행중인 특정 node의 정보를 보여준다.
+- `kubectl apply -f <anything>.yaml`
+    - yaml파일에 명세한 Object를 k8s에 적용한다.
+- `kubectl delete -f <anything>.yaml`
+    - 명세한 대로 실행된 Object를 제거한다.
+- `kubectl delete pods/<pod_id>`
+    - pod의 id를 가지고 삭제한다.
+- `kubectl delete svc/<service_id>`
+    - service의 id를 가지고 삭제한다.
+- `kubectl exec -it pods/<pod_id> sh`
+    - 특정 pod에 접속할 때 사용한다.
+- `kubectl expose`
+    - deployment로 service를 배포하고 싶을 때 사용. 잘 사용하지 않는다. (.yaml)파일이 있기 때문.
