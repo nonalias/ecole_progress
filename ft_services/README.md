@@ -1,2 +1,3 @@
 - [vsftpd](./vsftpd/README.md)
 - [nginx](./nginx/README.md)
+- [mysql](./mysql/README.md)
