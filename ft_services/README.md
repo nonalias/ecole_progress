@@ -1,3 +1,4 @@
+- [42 cluster에서 minikube 기본설정하기])(./minikube/README.md)
 - [metallb](./metallb/README.md)
 - [nginx](./nginx/README.md)
 - [vsftpd](./vsftpd/README.md)
