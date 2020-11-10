@@ -5,7 +5,7 @@
 - 그 과정은 다음과 같다. (참고 : [https://metallb.universe.tf/installation/](https://metallb.universe.tf/installation/))
 
 ```cpp
-midir metalLB
+mkdir metalLB
 cd metalLB
 
 # 링크를 바로 apply 해도 되지만 링크가 바뀔 수 있으므로 다운로드받아 사용한다.
