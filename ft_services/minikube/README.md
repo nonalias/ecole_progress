@@ -43,7 +43,7 @@
 ```cpp
 cd ~
 cd goinfre
-touch .minikube
+mkdir .minikube
 cd ..
 ln -s goinfre/.minikube .minikube
 ```
