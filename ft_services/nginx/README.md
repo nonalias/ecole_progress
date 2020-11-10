@@ -2,7 +2,7 @@
 
 ## Kubernetes(k8s)를 통해 nginx를 가동시켜 보자.
 
-- 먼저, [MetalLB](Nginx%20and%20SSH,%20SSL%20protocol%20in%20alpine%2013cf9068e2d24408bee140212919e855/MetalLB%206d06bb696fa540cbbe67678fb960063c.md)가 설치되어있어야 한다.
+- 먼저, [MetalLB](../metallb/README.md)가 설치되어있어야 한다.
 <details><summary>시작하기에 앞서, Docker환경에서 nginx를 가동시켜 보자 (필수 아님)</summary>
 - 우선, Dockerfile을 작성해 준다.
 
