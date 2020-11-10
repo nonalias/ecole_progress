@@ -49,7 +49,7 @@
         를 입력해서 redis container에 들어가자.
         ```
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled.png)
 
         - 당연하게도, 아무 파일도 넣지 않았기 때문에 아무것도 없다. 여기서
 
@@ -65,7 +65,7 @@
         ls
         ```
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%201.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%201.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%201.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%201.png)
 
 - Local
     - hostPath
@@ -73,7 +73,7 @@
         - 같은 hostPath에 있는 Volume은 여러 Pod 사이에서 공유되어 사용된다.
         - 또한, Pod가 삭제되더라도 hostPath에 있는 파일들은 삭제되지 않고, 다른 Pod가 같은 hostPath를 마운트하게 되면, 남아있는 파일을 엑세스 할 수 있다.
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%202.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%202.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%202.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%202.png)
 
         - 주의할 점은, Pod가 재시작되어 **다른** 노드에서 기동될 경우, 그 노드의 hostPath를 사용하기 때문에 이전에 다른 노드에서 사용한 hostPath의 파일 내용은 엑세스가 불가능하다.
             - Pod가 삭제됬을 때 그 Node에서 재생성 되리라는 법은 없기 때문이다.
@@ -144,11 +144,11 @@
             - 즉, 개발자는 PVC에 대한 설정만 해주면 된다.
             - sys admin은 PV를 설정해준다.
 
-                ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%203.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%203.png)
+                ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%203.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%203.png)
 
         - ClusterIP로 만들경우 다른 Pod에서 접근이 가능하다.
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%204.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%204.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%204.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%204.png)
 
 ## 실습
 
@@ -192,11 +192,11 @@
 
         - container1에서 `touch container1`를 하면
 
-            ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%205.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%205.png)
+            ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%205.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%205.png)
 
         - container2에서 확인할 수 있다.
 
-            ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%206.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%206.png)
+            ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%206.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%206.png)
 
     - 실습을 마쳤다면 Pod을 삭제해 준다.
 
@@ -266,9 +266,9 @@
 
     - 이제, 확인해보자.
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%207.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%207.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%207.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%207.png)
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%208.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%208.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%208.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%208.png)
 
     - 미리 만들어놓은 파일들이 같이 공유되어 있는 것을 볼 수 있다.
     - 삭제는 다음과 같이 진행한다.
@@ -316,7 +316,7 @@
 
     - 이 때 pvc에서 명세한 storage와 accessMode에 따라 자동으로 PV를 선택해 준다.
 
-        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%209.png](Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%209.png)
+        ![Volume%20%E1%84%80%E1%85%B3%E1%84%85%E1%85%B5%E1%84%80%E1%85%A9%20PVC,%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%209.png](Volume%20그리고%20PVC%2C%20PV%2018a99d26f0f84367a4181bedcc90e30d/Untitled%209.png)
 
     - 그리고 Pod 하나를 만들자.
     - `vim pod.yaml`
