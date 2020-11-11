@@ -61,6 +61,7 @@
 </details>
 <details>
     <summary>공개 키</summary>
+    
 - 공개 키 방식은 두 개의 키를 갖게 되는데,
 - **A키로 암호화를 하면 B키로 복호화를 할 수 있고, B 키로 암호화를 하면 A키로 복호화할 수 있는 방식이다.**
 - 비공개 키는 자신이 가지고 있고, 공개키를 타인에게 넘겨주면 이 공개키로 정보를 암호화를 한다. 암호화 된 그 정보를 필요한 곳에 전달하면 비공개 키를 가지고 있는 다른 누군가가 그 정보를 복호화하여 사용할 수 있다.
@@ -85,6 +86,7 @@
         - rsa방식으로 public key 를 이용해 암호화를 한 결과가 file.ssl이다. 이 file.ssl을 private key를 가지고있는 다른 사용자에게 전송했다고 가정해 보자.
     - `openssl rsqutl -decrypt -inkey private.pem -in file.ssl -out decrypted.txt`
         - 전송된 file.ssl을 비공개키를 이용해 평문으로 복호화하는 코드이다.
+        
 </details>
 
 ## SSL 인증서
