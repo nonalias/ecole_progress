@@ -32,55 +32,60 @@
 ## SSL에서 사용하는 암호화의 종류
 
 - 크게 두 가지로 나뉜다. **대칭키**과 **공개키**.
-- 대칭 키
-    - 암호화를 할 때 사용하는 비밀번호를 key 라고 한다.
-    - 이 key에 따라서 암호화를 한 결과가 달라진다.
-    - 따라서 key 를 모르면 복호화를 할 수 없다.
-    - 대칭 키는 동일한 키로 암호화와 복호화를 할 수 있는 방식의 암호화 기법을 의미한다.
-    - 다음 과정을 따라해보자.
-    - `echo 'this is the plain text' > plaintext.txt`
-    - `openssl enc -e -des3 -salt -in plaintext.txt -out out.bin`
 
-        ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled.png)
+<details>
+    <summary>대칭 키</summary>
+- 암호화를 할 때 사용하는 비밀번호를 key 라고 한다.
+- 이 key에 따라서 암호화를 한 결과가 달라진다.
+- 따라서 key 를 모르면 복호화를 할 수 없다.
+- 대칭 키는 동일한 키로 암호화와 복호화를 할 수 있는 방식의 암호화 기법을 의미한다.
+- 다음 과정을 따라해보자.
+- `echo 'this is the plain text' > plaintext.txt`
+- `openssl enc -e -des3 -salt -in plaintext.txt -out out.bin`
 
-    - key 를 입력하면 암호화가 된 파일이 만들어진다.
-    - 이를 다시 복호화 해보자.
-    - `openssl enc -d -des3 -salt -in out2.bin -out origintext.txt`
+    ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled.png)
 
-        ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%201.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%201.png)
+- key 를 입력하면 암호화가 된 파일이 만들어진다.
+- 이를 다시 복호화 해보자.
+- `openssl enc -d -des3 -salt -in out2.bin -out origintext.txt`
 
-    - 방금 입력한 패스워드를 다시 입력하면 복호화가 완료된다. 잘 되었는 지 확인해보자.
-    - `cat origintext.txt`
+    ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%201.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%201.png)
 
-        ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%202.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%202.png)
+- 방금 입력한 패스워드를 다시 입력하면 복호화가 완료된다. 잘 되었는 지 확인해보자.
+- `cat origintext.txt`
 
-    - 대칭 키 방식은 단점이 있다. 암호를 주고 받는 사람들 사이에 대칭키를 전달하는 것이 어렵다는 점이다. 대칭키가 유출되면 키를 획득한 공격자는 암호의 내용을 복호화할 수 있기 때문에 암호가 무용지물이 된다.
-    - 이런 배경에서 나온 암호화 방식이 공개키 방식이다.
-- 공개 키
-    - 공개 키 방식은 두 개의 키를 갖게 되는데,
-    - **A키로 암호화를 하면 B키로 복호화를 할 수 있고, B 키로 암호화를 하면 A키로 복호화할 수 있는 방식이다.**
-    - 비공개 키는 자신이 가지고 있고, 공개키를 타인에게 넘겨주면 이 공개키로 정보를 암호화를 한다. 암호화 된 그 정보를 필요한 곳에 전달하면 비공개 키를 가지고 있는 다른 누군가가 그 정보를 복호화하여 사용할 수 있다.
-    - 전달하는 과정에서 공개키가 유출된다고 하더라도 비공개키를 모르면 정보를 복호화할 수 없기 때문에 안전하다.
-    - 이런 방식을 전혀 다르게 응용해보자.
-    - 비공개 키를 가진 자가 정보를 비공개키로 암호화를 하고, 암호화된 그 정보와 공개키를 타인에게 넘겨준다.
-        - 이렇게되면 공개키를 가진 어떤 누구라도 그 정보를 해석할 수 있는 문제가 발생하는데, 왜 이런 방식을 사용하는 지 의구심이 들 것이다.
-        - 하지만 이 방식을 사용하면 그 암호화된 정보가 어떤 공개키와 매칭이 되는 지 알 수 있다.
-            - 즉, 누가 만들었는 지 **신원을 알 수** 있다는 것이다.
-            - ~~게다가, Website를 운영할 땐 정보를 굳이 숨기고 있지 않아도 된다!~~
-        - 이러한 방식을 **전자서명**이라고 한다.
-    - 그럼 다음과 같은 과정을 따라해보자. (전자서명 아님)
-        - `openssl genrsa -out private.pem 1024`
-            - private.pem 이라는 이름의 키를 생성한다.
-            - 이 key는 1024bit의 크기를 갖고, 이 숫자가 높을수록 안전하다.
-        - `openssl rsa -in private.pem -out public.pem -outform PEM -pubout`
-            - private.pem이라는 이름의 "비공개 키" 에 대해 public.pem 이라는 이름의 "공개 키"를 생성한다.
-            - 이 공개키를 자신에게 정보를 제공할 사람에게 전송하면 된다.
-        - `echo 'coding everybody' > file.txt`
-            - 이 파일은 평문이기 때문에 암호화가 필요하다.
-        - `openssl rsautl -encrypt -inkey public.pem -pubin -in file.txt -out file.ssl`
-            - rsa방식으로 public key 를 이용해 암호화를 한 결과가 file.ssl이다. 이 file.ssl을 private key를 가지고있는 다른 사용자에게 전송했다고 가정해 보자.
-        - `openssl rsqutl -decrypt -inkey private.pem -in file.ssl -out decrypted.txt`
-            - 전송된 file.ssl을 비공개키를 이용해 평문으로 복호화하는 코드이다.
+    ![SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%202.png](SSL%20TLS%2088ee8f96df594b46821fc7c16aa42cb6/Untitled%202.png)
+
+- 대칭 키 방식은 단점이 있다. 암호를 주고 받는 사람들 사이에 대칭키를 전달하는 것이 어렵다는 점이다. 대칭키가 유출되면 키를 획득한 공격자는 암호의 내용을 복호화할 수 있기 때문에 암호가 무용지물이 된다.
+- 이런 배경에서 나온 암호화 방식이 공개키 방식이다.
+</details>
+<details>
+    <summary>공개 키</summary>
+- 공개 키 방식은 두 개의 키를 갖게 되는데,
+- **A키로 암호화를 하면 B키로 복호화를 할 수 있고, B 키로 암호화를 하면 A키로 복호화할 수 있는 방식이다.**
+- 비공개 키는 자신이 가지고 있고, 공개키를 타인에게 넘겨주면 이 공개키로 정보를 암호화를 한다. 암호화 된 그 정보를 필요한 곳에 전달하면 비공개 키를 가지고 있는 다른 누군가가 그 정보를 복호화하여 사용할 수 있다.
+- 전달하는 과정에서 공개키가 유출된다고 하더라도 비공개키를 모르면 정보를 복호화할 수 없기 때문에 안전하다.
+- 이런 방식을 전혀 다르게 응용해보자.
+- 비공개 키를 가진 자가 정보를 비공개키로 암호화를 하고, 암호화된 그 정보와 공개키를 타인에게 넘겨준다.
+    - 이렇게되면 공개키를 가진 어떤 누구라도 그 정보를 해석할 수 있는 문제가 발생하는데, 왜 이런 방식을 사용하는 지 의구심이 들 것이다.
+    - 하지만 이 방식을 사용하면 그 암호화된 정보가 어떤 공개키와 매칭이 되는 지 알 수 있다.
+        - 즉, 누가 만들었는 지 **신원을 알 수** 있다는 것이다.
+        - ~~게다가, Website를 운영할 땐 정보를 굳이 숨기고 있지 않아도 된다!~~
+    - 이러한 방식을 **전자서명**이라고 한다.
+- 그럼 다음과 같은 과정을 따라해보자. (전자서명 아님)
+    - `openssl genrsa -out private.pem 1024`
+        - private.pem 이라는 이름의 키를 생성한다.
+        - 이 key는 1024bit의 크기를 갖고, 이 숫자가 높을수록 안전하다.
+    - `openssl rsa -in private.pem -out public.pem -outform PEM -pubout`
+        - private.pem이라는 이름의 "비공개 키" 에 대해 public.pem 이라는 이름의 "공개 키"를 생성한다.
+        - 이 공개키를 자신에게 정보를 제공할 사람에게 전송하면 된다.
+    - `echo 'coding everybody' > file.txt`
+        - 이 파일은 평문이기 때문에 암호화가 필요하다.
+    - `openssl rsautl -encrypt -inkey public.pem -pubin -in file.txt -out file.ssl`
+        - rsa방식으로 public key 를 이용해 암호화를 한 결과가 file.ssl이다. 이 file.ssl을 private key를 가지고있는 다른 사용자에게 전송했다고 가정해 보자.
+    - `openssl rsqutl -decrypt -inkey private.pem -in file.ssl -out decrypted.txt`
+        - 전송된 file.ssl을 비공개키를 이용해 평문으로 복호화하는 코드이다.
+</details>
 
 ## SSL 인증서
 
