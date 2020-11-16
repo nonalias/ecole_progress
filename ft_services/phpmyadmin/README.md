@@ -1,173 +1,178 @@
 # phpMyAdmin in alpine
 
 - 먼저, [nginx](https://www.notion.so/Nginx-and-SSH-SSL-protocol-in-alpine-13cf9068e2d24408bee140212919e855)와 [mysql](https://www.notion.so/MySQL-in-alpine-d02b8abcb9e14c9ba8fe7ad8c8cdecea)이 제대로 작동되고 있어야 한다.
-- 시작하기에 앞서, Docker Container로 먼저 작동시켜보자.(필수사항 아님.)
-    - 우선 앞서 진행했던 mysql이 작동되고 있어야 한다.
-        - 그 이유는, phpMyAdmin은 mySQL을 편하게 관리할 수 있도록 해주는 tool 이기 때문이다.
-        - 그러므로 당연히 조작할 DB가 작동되고 있어야 한다.
-    - 먼저, Dockerfile을 작성해보자.
-        - `vim Dockerfile`
 
-            ```jsx
-            FROM alpine:latest
+<details>
+    
+    <summary>시작하기에 앞서, Docker Container로 먼저 작동시켜보자.(필수사항 아님.)</summary>
+- 우선 앞서 진행했던 mysql이 작동되고 있어야 한다.
+    - 그 이유는, phpMyAdmin은 mySQL을 편하게 관리할 수 있도록 해주는 tool 이기 때문이다.
+    - 그러므로 당연히 조작할 DB가 작동되고 있어야 한다.
+- 먼저, Dockerfile을 작성해보자.
+    - `vim Dockerfile`
 
-            RUN apk update
-            RUN apk add vim
+        ```jsx
+        FROM alpine:latest
 
-            # nginx, php-fpm7에 대한 패키지 설치 나머지는 안깔면 phpmyadmin에서 깔라고 한다.
-            RUN apk add nginx \
-                    php7 \
-                    php7-bcmath \
-                    php7-ctype \
-                    php7-curl \
-                    php7-fpm \
-                    php7-gd \
-                    php7-iconv \
-                    php7-intl \
-                    php7-json \
-                    php7-mbstring \
-                    php7-mcrypt \
-                    php7-mysqlnd \
-                    php7-mysqli \
-                    php7-opcache \
-                    php7-openssl \
-                    php7-pdo \
-                    php7-pdo_mysql \
-                    php7-pdo_pgsql \
-                    php7-pdo_sqlite \
-                    php7-phar \
-                    php7-posix \
-                    php7-session \
-                    php7-soap \
-                    php7-xml \
-                    php7-zip
+        RUN apk update
+        RUN apk add vim
 
-            # 5000번 포트로 진입하기 때문에 5000이다.
-            EXPOSE 5000
-            # 자체 nginx을 구동해야 하므로 default.conf파일을 복사해준다. 
-            # entry.sh는 ENTRYPOINT에서 실행할 파일이다.
-            COPY entry.sh /tmp/entry.sh
-            COPY default.conf /etc/nginx/conf.d/
+        # nginx, php-fpm7에 대한 패키지 설치 나머지는 안깔면 phpmyadmin에서 깔라고 한다.
+        RUN apk add nginx \
+                php7 \
+                php7-bcmath \
+                php7-ctype \
+                php7-curl \
+                php7-fpm \
+                php7-gd \
+                php7-iconv \
+                php7-intl \
+                php7-json \
+                php7-mbstring \
+                php7-mcrypt \
+                php7-mysqlnd \
+                php7-mysqli \
+                php7-opcache \
+                php7-openssl \
+                php7-pdo \
+                php7-pdo_mysql \
+                php7-pdo_pgsql \
+                php7-pdo_sqlite \
+                php7-phar \
+                php7-posix \
+                php7-session \
+                php7-soap \
+                php7-xml \
+                php7-zip
 
-            # phpmyadmin이 담길 폴더를 미리 만들어준다.
-            RUN mkdir -p /var/www/html
+        # 5000번 포트로 진입하기 때문에 5000이다.
+        EXPOSE 5000
+        # 자체 nginx을 구동해야 하므로 default.conf파일을 복사해준다. 
+        # entry.sh는 ENTRYPOINT에서 실행할 파일이다.
+        COPY entry.sh /tmp/entry.sh
+        COPY default.conf /etc/nginx/conf.d/
 
-            # phpmyadmin을 다운받고, 압축을 풀고, 이름을 간단하게 바꾸고, /var/www/html으로 옮겨준다.
-            RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-all-languages.tar.gz
-            RUN tar -xvf phpMyAdmin-5.0.2-all-languages.tar.gz
-            RUN rm -f phpMyAdmin-5.0.2-all-languages.tar.gz
-            RUN mv phpMyAdmin-5.0.2-all-languages phpmyadmin
-            RUN mv /phpmyadmin /var/www/html/
+        # phpmyadmin이 담길 폴더를 미리 만들어준다.
+        RUN mkdir -p /var/www/html
 
-            # phpmyadmin 설정파일을 복붙해준다. 여기서 host의 정보를 수정한다.
-            COPY config.inc.php /var/www/html/phpmyadmin
+        # phpmyadmin을 다운받고, 압축을 풀고, 이름을 간단하게 바꾸고, /var/www/html으로 옮겨준다.
+        RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-all-languages.tar.gz
+        RUN tar -xvf phpMyAdmin-5.0.2-all-languages.tar.gz
+        RUN rm -f phpMyAdmin-5.0.2-all-languages.tar.gz
+        RUN mv phpMyAdmin-5.0.2-all-languages phpmyadmin
+        RUN mv /phpmyadmin /var/www/html/
 
-            ENTRYPOINT ["sh", "/tmp/entry.sh"]
-            ```
+        # phpmyadmin 설정파일을 복붙해준다. 여기서 host의 정보를 수정한다.
+        COPY config.inc.php /var/www/html/phpmyadmin
 
-    - nginx 설정파일인 default.conf를 만들어보자.
-        - `vim default.conf`
+        ENTRYPOINT ["sh", "/tmp/entry.sh"]
+        ```
 
-            ```jsx
-            # This is a default site configuration which will simply return 404, preventing
-            # chance access to any other virtualhost.
+- nginx 설정파일인 default.conf를 만들어보자.
+    - `vim default.conf`
 
-            server {
-            	listen 5000 default_server;
-            	listen [::]:5000 default_server;
+        ```jsx
+        # This is a default site configuration which will simply return 404, preventing
+        # chance access to any other virtualhost.
 
-            	root /var/www/html/phpmyadmin;
+        server {
+            listen 5000 default_server;
+            listen [::]:5000 default_server;
 
-            	location / {
-            		try_files $uri $uri/ = 404;
-            	}
+            root /var/www/html/phpmyadmin;
 
-            # php 문법을 해석하기 위한 구문이다. 
-            # 이 구문이 있어야 *.php 파일을 해석할 수 있다.(cgi가 해석한다.)
-            	location ~ \.php$ {
-            		include fastcgi.conf;
-            		fastcgi_index index.php;
-            		fastcgi_pass 127.0.0.1:9000;
-            	}
-
-            	index index.php;
+            location / {
+                try_files $uri $uri/ = 404;
             }
-            ```
 
-    - phpmyadmin 설정파일인 config.inc.php를 작성해보자.
-        - 여기서, 주의해야 할 점은 host를 나중에 mysql 컨테이너가 실행됬을 때 **그 아이피로 바꾸어주어야** 한다는 점이다.
-        - `vim config.inc.php`
+        # php 문법을 해석하기 위한 구문이다. 
+        # 이 구문이 있어야 *.php 파일을 해석할 수 있다.(cgi가 해석한다.)
+            location ~ \.php$ {
+                include fastcgi.conf;
+                fastcgi_index index.php;
+                fastcgi_pass 127.0.0.1:9000;
+            }
 
-            ```jsx
-            <?php
-            declare(strict_types=1);
+            index index.php;
+        }
+        ```
 
-            $cfg['blowfish_secret'] = 'sibal_ft_services_fucking_blowfi'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
-            $i = 0;
-            $i++;
-            $cfg['Servers'][$i]['auth_type'] = 'cookie';
-            $cfg['Servers'][$i]['host'] = '172.17.0.3'; // **이 부분을 반드시 바꿔줘야 한다!!!**
-            $cfg['Servers'][$i]['compress'] = false;
-            $cfg['Servers'][$i]['AllowNoPassword'] = false;
+- phpmyadmin 설정파일인 config.inc.php를 작성해보자.
+    - 여기서, 주의해야 할 점은 host를 나중에 mysql 컨테이너가 실행됬을 때 **그 아이피로 바꾸어주어야** 한다는 점이다.
+    - `vim config.inc.php`
 
-            $cfg['UploadDir'] = '';
-            $cfg['SaveDir'] = '';
-            ```
+        ```jsx
+        <?php
+        declare(strict_types=1);
 
-    - 이제 필요한 명령어들을 실행하는 shell 파일을 작성해보자.
-        - `vim entry.sh`
+        $cfg['blowfish_secret'] = 'sibal_ft_services_fucking_blowfi'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
+        $i = 0;
+        $i++;
+        $cfg['Servers'][$i]['auth_type'] = 'cookie';
+        $cfg['Servers'][$i]['host'] = '172.17.0.3'; // **이 부분을 반드시 바꿔줘야 한다!!!**
+        $cfg['Servers'][$i]['compress'] = false;
+        $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
-            ```jsx
-            /usr/sbin/php-fpm7
-            nginx -g 'pid /tmp/nginx.pid; daemon off;'
-            ```
+        $cfg['UploadDir'] = '';
+        $cfg['SaveDir'] = '';
+        ```
 
-    - Docker를 편하게 빌드, 실행할 수 있게 해주는 Makefile을 만들어 보자. (명령어가 익숙하다면 할 필요 없음)
-        - `vim Makefile`
+- 이제 필요한 명령어들을 실행하는 shell 파일을 작성해보자.
+    - `vim entry.sh`
 
-            ```jsx
-            IMG_NAME	=	my_phpmyadmin
-            PS_NAME		=	phpmyadmin-ps
-            PORT1		=	5000
+        ```jsx
+        /usr/sbin/php-fpm7
+        nginx -g 'pid /tmp/nginx.pid; daemon off;'
+        ```
 
-            all	:	build run
+- Docker를 편하게 빌드, 실행할 수 있게 해주는 Makefile을 만들어 보자. (명령어가 익숙하다면 할 필요 없음)
+    - `vim Makefile`
 
-            run	:
-            	docker run --name $(PS_NAME) -d -p $(PORT1):$(PORT1) $(IMG_NAME)
+        ```jsx
+        IMG_NAME	=	my_phpmyadmin
+        PS_NAME		=	phpmyadmin-ps
+        PORT1		=	5000
 
-            runit	:
-            	docker run --name $(PS_NAME) -it -p $(PORT1):$(PORT1) $(IMG_NAME)
+        all	:	build run
 
-            exec:
-            	docker exec -it $$(docker ps -aq -f "name=$(PS_NAME)") sh
+        run	:
+            docker run --name $(PS_NAME) -d -p $(PORT1):$(PORT1) $(IMG_NAME)
 
-            build	:
-            	docker build -t $(IMG_NAME) .
+        runit	:
+            docker run --name $(PS_NAME) -it -p $(PORT1):$(PORT1) $(IMG_NAME)
 
-            rm	:
-            	docker rm -f $$(docker ps -f "name=$(PS_NAME)" -aq)
+        exec:
+            docker exec -it $$(docker ps -aq -f "name=$(PS_NAME)") sh
 
-            rmi	:
-            	docker rmi -f $(IMG_NAME)
-            ```
+        build	:
+            docker build -t $(IMG_NAME) .
 
-    - 이제, mysql container를 실행해 보자.
-        - `cd ../mysql/local_not_necessary`
-        - `make build`
-        - `make run`
-    - 그리고 나서, mysql의 IP를 확인하자.
-        - `docker ps`  → 이걸로 Container ID 4자리 를 확인,
-        - `docker inspect <Container ID> | grep IPAddress`
-        - 이 명령어를 실행하면 해당 IP가 나올 것이다.
-        - 이제 그 IP를 외워서 config.inc.php에 있는 host에 대입시켜주자.
-    - 대입이 완료되었다면, phpmyadmin의 container를 실행시켜줄 차례다.
-        - `make`
-    - 이제, 브라우저를 열고 다음과 같이 입력하자
-        - `localhost:5000`
-        - modyhoon:1q2w3e4r 를 입력해서 들어가지면 완료.
-    - 헌데, 이 아이피가 계속 바뀌면 설정파일도 계속 바꿔주어야 할까?
-        - 정답은 아니다. Docker Container 환경에서는 매번 컨테이너의 아이피가 랜덤으로 배정받기 때문에 건드려 줘야한다. but  --link 라는 방법도 있지만 선호되지 않음.
-        - k8s에서는 서비스 이름만 넣으면 [저절로 그 서비스의 ClusterIP가 입력](https://www.notion.so/Kubernetes-DNS-a3b707350c324444878d918543a0e65d)된다. 따라서 같은 Cluster 내에 있으면 해당 IP로 접근할 수 있다.
+        rm	:
+            docker rm -f $$(docker ps -f "name=$(PS_NAME)" -aq)
+
+        rmi	:
+            docker rmi -f $(IMG_NAME)
+        ```
+
+- 이제, mysql container를 실행해 보자.
+    - `cd ../mysql/local_not_necessary`
+    - `make build`
+    - `make run`
+- 그리고 나서, mysql의 IP를 확인하자.
+    - `docker ps`  → 이걸로 Container ID 4자리 를 확인,
+    - `docker inspect <Container ID> | grep IPAddress`
+    - 이 명령어를 실행하면 해당 IP가 나올 것이다.
+    - 이제 그 IP를 외워서 config.inc.php에 있는 host에 대입시켜주자.
+- 대입이 완료되었다면, phpmyadmin의 container를 실행시켜줄 차례다.
+    - `make`
+- 이제, 브라우저를 열고 다음과 같이 입력하자
+    - `localhost:5000`
+    - modyhoon:1q2w3e4r 를 입력해서 들어가지면 완료.
+- 헌데, 이 아이피가 계속 바뀌면 설정파일도 계속 바꿔주어야 할까?
+    - 정답은 아니다. Docker Container 환경에서는 매번 컨테이너의 아이피가 랜덤으로 배정받기 때문에 건드려 줘야한다. but  --link 라는 방법도 있지만 선호되지 않음.
+    - k8s에서는 서비스 이름만 넣으면 [저절로 그 서비스의 ClusterIP가 입력](https://www.notion.so/Kubernetes-DNS-a3b707350c324444878d918543a0e65d)된다. 따라서 같은 Cluster 내에 있으면 해당 IP로 접근할 수 있다.
+
+</details>
 
 ## Step 1 : Dockerfile 작성
 
