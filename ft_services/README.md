@@ -3,3 +3,4 @@
 - [nginx](./nginx/README.md)
 - [vsftpd](./vsftpd/README.md)
 - [mysql](./mysql/README.md)
+- [phpmyadmin](./phpmyadmin.README.md)
