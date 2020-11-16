@@ -3,8 +3,8 @@
 - 먼저, [nginx](https://www.notion.so/Nginx-and-SSH-SSL-protocol-in-alpine-13cf9068e2d24408bee140212919e855)와 [mysql](https://www.notion.so/MySQL-in-alpine-d02b8abcb9e14c9ba8fe7ad8c8cdecea)이 제대로 작동되고 있어야 한다.
 
 <details>
-    
     <summary>시작하기에 앞서, Docker Container로 먼저 작동시켜보자.(필수사항 아님.)</summary>
+    
 - 우선 앞서 진행했던 mysql이 작동되고 있어야 한다.
     - 그 이유는, phpMyAdmin은 mySQL을 편하게 관리할 수 있도록 해주는 tool 이기 때문이다.
     - 그러므로 당연히 조작할 DB가 작동되고 있어야 한다.
